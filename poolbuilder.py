@@ -39,6 +39,7 @@ class App(Frame):
         self.poolBoxScrollbar = Scrollbar(self.poolBox, orient=VERTICAL)
         self.poolBox.config(yscrollcommand=self.poolBoxScrollbar.set)
         self.poolBoxScrollbar.config(command=self.poolBox.yview)
+        self.poolBox.bind("<<ListBoxSelect>>", self.choosePool)
 
         for champion in sorted(champions):
             self.champBox.insert(END, champion)
@@ -59,10 +60,8 @@ class App(Frame):
     def centerWindow(self):
         w = 500
         h = 200
-
         sw = self.parent.winfo_screenwidth()
         sh = self.parent.winfo_screenheight()
-
         x = (sw - w)/2
         y = (sh - h)/2
         self.parent.geometry('%dx%d+%d+%d' % (w, h, x, y))
@@ -72,6 +71,13 @@ class App(Frame):
         champions = file.readlines()
         file.close()
         return champions
+
+    def choosePool(self):
+        if self.buildMode:
+            print "oops"
+        else:
+            print "pls work now"
+            self.loadChampPools(2)
 
     def loadChampPools(self, level):
         if level == 1:
@@ -86,6 +92,7 @@ class App(Frame):
             file.close()
         elif level == 2:
             print "level 2"
+            self.poolBox.delete(0, END)
         else:
             print "level null"
 
