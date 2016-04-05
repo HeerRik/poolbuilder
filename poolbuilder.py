@@ -13,7 +13,7 @@ class App(Frame):
 
     def initUI(self):
         self.parent.title("Champion Pool Builder")
-        self.parent.iconbitmap("c:\Python27\DLLs\pythonio.ico")
+        self.parent.iconbitmap("assets/pythonio.ico")
         self.style = Style()
         self.style.theme_use("default")
 
@@ -21,6 +21,7 @@ class App(Frame):
 
         self.loadChampions()
         champions = self.loadChampions()
+        self.buildMode = True
 
         self.champsLabel = Label(text="Champions")
         self.champBox = Listbox(self)
@@ -31,7 +32,7 @@ class App(Frame):
         self.addButton = Button(self, text=">>", command=self.addChampToPool)
         self.removeButton = Button(self, text="<<", command=self.removeChampFromPool)
         self.saveButton = Button(self, text="Save champion pool", width=18, command=self.saveChampPool)
-        self.loadButton = Button(self, text="Load champion pool", width=18, command=self.loadChampPools)
+        self.loadButton = Button(self, text="Load champion pool", width=18, command=lambda: self.loadChampPools(1))
 
         self.poolLabel = Label(text="Champion Pool")
         self.poolBox = Listbox(self)
@@ -67,31 +68,37 @@ class App(Frame):
         self.parent.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     def loadChampions(self):
-        file = open('Champions.txt', 'r')
+        file = open('assets/Champions.txt', 'r')
         champions = file.readlines()
         file.close()
         return champions
 
-    def loadChampPools(self):
-        file = open('champpools.txt', 'r')
-        champPools = file.readlines()
-        champPoolFile = champPools[0]
-        file.close()
-        file = open(champPoolFile, 'r')
-        champPool = file.readlines()
-        print champPool
-        file.close()
+    def loadChampPools(self, level):
+        if level == 1:
+            self.buildMode = False
+            self.champBox.delete(0, END)
+            file = open('assets/champpools.txt', 'r')
+            champPools = file.readlines()
+            self.saveButton.config(state=DISABLED)
+            self.loadButton.config(state=DISABLED)
+            for pool in champPools:
+                self.poolBox.insert(END, pool)
+            file.close()
+        elif level == 2:
+            print "level 2"
+        else:
+            print "level null"
 
     def addChampToPool(self):
         idx = self.champBox.curselection()
-        if idx:
+        if idx and self.buildMode:
             name = self.champBox.get(idx)
             self.poolBox.insert(END, name)
             self.champBox.delete(idx)
 
     def removeChampFromPool(self):
         idx = self.poolBox.curselection()
-        if idx:
+        if idx and self.buildMode:
             name = self.poolBox.get(idx)
             self.champBox.insert(END, name)
             self.poolBox.delete(idx)
