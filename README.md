@@ -1,4 +1,4 @@
-# Poolbuilder Alpha
+# Poolbuilder Beta
 Poolbuilder is an application for creating champ select filters for the game League of Legends.
 
 This is a project to get to know Python, as well as give a little something to the League of Legends community.

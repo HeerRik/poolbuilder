@@ -133,7 +133,7 @@ class App(Frame):
             for champion in sorted(championPool):
                 file.write(champion + "\n")
         with open("assets/champpools.txt", "a")as file:
-            file.write(poolTitle.title)
+            file.write(poolTitle.title + "\n")
 
     def buildPoolString(self):
         clipper = Tk()
