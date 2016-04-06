@@ -19,8 +19,6 @@ class App(Frame):
 
         self.pack(fill=BOTH, expand=1)
 
-        self.loadChampions()
-        champions = self.loadChampions()
         self.buildMode = True
 
         self.champsLabel = Label(text="Champions")
@@ -33,16 +31,13 @@ class App(Frame):
         self.removeButton = Button(self, text="<<", command=self.removeChampFromPool)
         self.saveButton = Button(self, text="Save champion pool", width=18, command=self.saveChampPool)
         self.loadButton = Button(self, text="Load champion pool", width=18, command=lambda: self.loadChampPools(1))
+        self.confirmLoadButton = Button(self, text="Load", width=6, command=self.choosePool)
 
         self.poolLabel = Label(text="Champion Pool")
         self.poolBox = Listbox(self)
         self.poolBoxScrollbar = Scrollbar(self.poolBox, orient=VERTICAL)
         self.poolBox.config(yscrollcommand=self.poolBoxScrollbar.set)
         self.poolBoxScrollbar.config(command=self.poolBox.yview)
-        self.poolBox.bind("<<ListBoxSelect>>", self.choosePool)
-
-        for champion in sorted(champions):
-            self.champBox.insert(END, champion)
 
         self.champsLabel.place(x=5, y=5)
         self.champBox.place(x=5, y=30)
@@ -56,6 +51,7 @@ class App(Frame):
         self.poolBox.place(x=200, y=30)
 
         self.champBox.focus_set()
+        self.loadChampions()
 
     def centerWindow(self):
         w = 500
@@ -67,34 +63,41 @@ class App(Frame):
         self.parent.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     def loadChampions(self):
-        file = open('assets/Champions.txt', 'r')
-        champions = file.readlines()
+        with open('assets/Champions.txt', 'r') as file:
+            champions = file.read().splitlines()
+        for champion in sorted(champions):
+            self.champBox.insert(END, champion)
         file.close()
-        return champions
 
     def choosePool(self):
-        if self.buildMode:
-            print "oops"
-        else:
-            print "pls work now"
-            self.loadChampPools(2)
+        idx = self.poolBox.curselection()
+        chosenPool = self.poolBox.get(idx)
+        self.confirmLoadButton.place_forget()
+        self.loadChampPools(2, chosenPool)
 
-    def loadChampPools(self, level):
+    def loadChampPools(self, level, pool=None):
         if level == 1:
             self.buildMode = False
             self.champBox.delete(0, END)
-            file = open('assets/champpools.txt', 'r')
-            champPools = file.readlines()
+            with open('assets/champpools.txt', 'r') as file:
+                champPools = file.read().splitlines()
             self.saveButton.config(state=DISABLED)
             self.loadButton.config(state=DISABLED)
             for pool in champPools:
                 self.poolBox.insert(END, pool)
-            file.close()
+            self.confirmLoadButton.place(x=350, y=90)
         elif level == 2:
             print "level 2"
             self.poolBox.delete(0, END)
-        else:
-            print "level null"
+            self.buildMode = True
+            self.loadButton.config(state=NORMAL)
+            self.saveButton.config(state=NORMAL)
+            fileName = pool + '.txt'
+            with open('assets/' + fileName, 'r') as file:
+                champPool = file.read().splitlines()
+            for champion in sorted(champPool):
+                self.poolBox.insert(END, champion)
+            self.loadChampions()
 
     def addChampToPool(self):
         idx = self.champBox.curselection()

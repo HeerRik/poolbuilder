@@ -24,7 +24,7 @@ Renekton
 Gragas
 Vi
 Yasuo
-Leblanc
+LeBlanc
 Syndra
 Malphite
 Taric
@@ -50,7 +50,7 @@ Lux
 Nocturne
 Talon
 Swain
-Xin Zao
+Xin Zhao
 Rumble
 Ziggs
 Urgot
@@ -65,7 +65,7 @@ Tryndamere
 Twisted Fate
 Ryze
 Shaco
-Shyvanna
+Shyvana
 Sion
 Singed
 Sivir
@@ -124,3 +124,7 @@ Bard
 Illaoi
 Ekko
 Azir
+Kalista
+Kindred
+Leona
+Zed
