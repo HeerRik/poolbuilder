@@ -20,8 +20,13 @@ be dealt with.
 The application is written in Python, and made available as .exe with py2exe.
 
 “"Python" is a registered trademark of the Python Software Foundation”
+
 https://www.python.org/
+
 “py2exe is a Python Distutils extension which converts Python scripts into executable Windows programs, able to run without requiring a Python installation”
+
 http://www.py2exe.org/
+
 “"League of Legends" is a registered trademark of Riot Games”
+
 https://www.leagueoflegends.com
