@@ -3,7 +3,7 @@ from Tkinter import *
 import tkSimpleDialog
 
 """
-Poolbuilder v0.6
+Poolbuilder v0.7
 
 Author: Rik Bandsma
 Github: https://github.com/HeerRik
@@ -20,7 +20,7 @@ class App(Frame):
 
     def initUI(self):
         self.parent.title("Champion Pool Builder")
-        self.parent.iconbitmap("assets/pythonio.ico")
+        self.parent.iconbitmap("assets/icon.ico")
         self.style = Style()
         self.style.theme_use("default")
 
@@ -72,11 +72,20 @@ class App(Frame):
         y = (sh - h)/2
         self.parent.geometry("%dx%d+%d+%d" % (w, h, x, y))
 
-    def loadChampions(self):
-        with open("assets/Champions.txt", "r") as file:
-            champions = file.read().splitlines()
-        for champion in sorted(champions):
-            self.champBox.insert(END, champion)
+    def loadChampions(self, pooled=None):
+        if pooled:
+            with open("assets/Champions.txt", "r") as file:
+                champions = file.read().splitlines()
+            for champ in pooled:
+                champions.remove(champ)
+            for champion in sorted(champions):
+                self.champBox.insert(END, champion)
+        else:
+            with open("assets/Champions.txt", "r") as file:
+                champions = file.read().splitlines()
+            for champion in sorted(champions):
+                self.champBox.insert(END, champion)
+
     def choosePool(self):
         idx = self.poolBox.curselection()
         chosenPool = self.poolBox.get(idx)
@@ -103,13 +112,14 @@ class App(Frame):
             self.loadButton.config(state=NORMAL)
             self.saveButton.config(state=NORMAL)
             self.getStringButton.config(state=NORMAL)
-            self.loadChampions()
 
             fileName = pool + ".txt"
             with open(self.allPools + fileName, "r") as file:
                 champPool = file.read().splitlines()
-            for champion in sorted(champPool):
-                self.poolBox.insert(END, champion)
+                for champion in sorted(champPool):
+                    self.poolBox.insert(END, champion)
+
+            self.loadChampions(champPool)
 
     def addChampToPool(self):
         idx = self.champBox.curselection()
@@ -125,15 +135,28 @@ class App(Frame):
             self.champBox.insert(END, name)
             self.poolBox.delete(idx)
 
+    def checkIfPoolExists(self, title):
+        with open("assets/champpools.txt", "r") as poolFile:
+            pools = poolFile.read().splitlines()
+            for pool in pools:
+                if pool == title:
+                    return True
+            return False
+
     def saveChampPool(self):
         championPool = self.poolBox.get(0, END)
         poolTitle = TitleDialog(self.parent)
         fileName = self.allPools + poolTitle.title + ".txt"
+        checker = self.checkIfPoolExists(poolTitle.title)
+
+        if not checker:
+            with open("assets/champpools.txt", "a")as file:
+                file.write(poolTitle.title + "\n")
         with open(fileName, "w+") as file:
             for champion in sorted(championPool):
                 file.write(champion + "\n")
-        with open("assets/champpools.txt", "a")as file:
-            file.write(poolTitle.title + "\n")
+
+
 
     def buildPoolString(self):
         clipper = Tk()
@@ -159,6 +182,7 @@ class TitleDialog(tkSimpleDialog.Dialog):
         questionLabel.grid(row=0)
         self.poolTitle = Entry(self.parent)
         self.poolTitle.grid(row=1)
+
         return self.poolTitle
 
     def apply(self):
