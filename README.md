@@ -9,4 +9,7 @@ Bugs that result from using the software in an incorrect way, may or may not be 
 A known problem is that champions inside a loaded pool still appear in the champions window, this will
 be dealt with.
 
+The application is written in Python, and turned to .exe with py2exe.
+
 “"Python" is a registered trademark of the Python Software Foundation”
+“py2exe is a Python Distutils extension which converts Python scripts into executable Windows programs, able to run without requiring a Python installation”
